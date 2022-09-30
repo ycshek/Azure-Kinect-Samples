@@ -6,6 +6,7 @@ public class main : MonoBehaviour
     public GameObject m_tracker;
     private SkeletalTrackingProvider m_skeletalTrackingProvider;
     public BackgroundData m_lastFrameData = new BackgroundData();
+    public GameObject playerBody;
 
     void Start()
     {
@@ -23,6 +24,11 @@ public class main : MonoBehaviour
                 if (m_lastFrameData.NumOfBodies != 0)
                 {
                     m_tracker.GetComponent<TrackerHandler>().updateTracker(m_lastFrameData);
+                    playerBody.SetActive(true);
+                }
+                else
+                {
+                    playerBody.SetActive(false);
                 }
             }
         }

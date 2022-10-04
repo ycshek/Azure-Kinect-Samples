@@ -6,6 +6,7 @@ using System.Text;
 
 public class PuppetAvatar : MonoBehaviour
 {
+    public SkeletonDataHandler KinectData;
     public TrackerHandler KinectDevice;
     Dictionary<JointId, Quaternion> absoluteOffsetMap;
     Animator PuppetAnimator;
@@ -92,7 +93,15 @@ public class PuppetAvatar : MonoBehaviour
                 // get the absolute offset
                 Quaternion absOffset = absoluteOffsetMap[(JointId)j];
                 Transform finalJoint = PuppetAnimator.GetBoneTransform(MapKinectJoint((JointId)j));
-                finalJoint.rotation = absOffset * Quaternion.Inverse(absOffset) * KinectDevice.absoluteJointRotations[j] * absOffset;
+                if (KinectDevice != null)
+                {
+                    finalJoint.rotation = absOffset * Quaternion.Inverse(absOffset) * KinectDevice.absoluteJointRotations[j] * absOffset;
+                }
+                else if (KinectData != null)
+                {
+                    finalJoint.rotation = absOffset * Quaternion.Inverse(absOffset) * KinectData.absoluteJointRotations[j] * absOffset;
+                }
+                
                 if (j == 0)
                 {
                     // character root plus translation reading from the kinect, plus the offset from the script public variables

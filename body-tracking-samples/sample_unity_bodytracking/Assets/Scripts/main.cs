@@ -6,8 +6,8 @@ public class main : MonoBehaviour
     public GameObject m_tracker;
     private SkeletalTrackingProvider m_skeletalTrackingProvider;
     public BackgroundData m_lastFrameData = new BackgroundData();
-    public GameObject playerBody_1;
-    public GameObject playerBody_2;
+    public GameObject playerBody;
+    public bool playerActive;
 
     void Start()
     {
@@ -24,14 +24,21 @@ public class main : MonoBehaviour
             {
                 if (m_lastFrameData.NumOfBodies != 0)
                 {
+                    //Debug.Log(JsonUtility.ToJson(m_lastFrameData));
                     m_tracker.GetComponent<TrackerHandler>().updateTracker(m_lastFrameData);
-                    playerBody_1.SetActive(true);
-                    playerBody_2.SetActive(true);
+                    if (playerBody != null)
+                    {
+                        playerBody.SetActive(true);                        
+                    }
+                    playerActive = true;
                 }
                 else
                 {
-                    playerBody_1.SetActive(false);
-                    playerBody_2.SetActive(false);
+                    if (playerBody != null)
+                    {
+                        playerBody.SetActive(false);                        
+                    }
+                    playerActive = false;
                 }
             }
         }

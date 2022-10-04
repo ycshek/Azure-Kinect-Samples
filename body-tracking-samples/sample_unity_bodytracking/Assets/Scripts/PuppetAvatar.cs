@@ -93,20 +93,59 @@ public class PuppetAvatar : MonoBehaviour
                 // get the absolute offset
                 Quaternion absOffset = absoluteOffsetMap[(JointId)j];
                 Transform finalJoint = PuppetAnimator.GetBoneTransform(MapKinectJoint((JointId)j));
+                Quaternion q = Quaternion.identity;
+
                 if (KinectDevice != null)
                 {
-                    finalJoint.rotation = absOffset * Quaternion.Inverse(absOffset) * KinectDevice.absoluteJointRotations[j] * absOffset;
+                    q = KinectDevice.absoluteJointRotations[j];
+
+                    if (j == 4 || j == 5 || j == 6 || j == 7)
+                    {
+                        q = KinectDevice.absoluteJointRotations[j+7];
+                    }
+                    else if (j == 11 || j == 12 || j == 13 || j == 14)
+                    {
+                        q = KinectDevice.absoluteJointRotations[j - 7];
+                    }
+                    else if (j == 18 || j == 19 || j == 20 || j == 21)
+                    {
+                        q = KinectDevice.absoluteJointRotations[j + 4];
+                    }
+                    else if (j == 22 || j == 23 || j == 24 || j == 25)
+                    {
+                        q = KinectDevice.absoluteJointRotations[j - 4];
+                    }
                 }
                 else if (KinectData != null)
                 {
-                    finalJoint.rotation = absOffset * Quaternion.Inverse(absOffset) * KinectData.absoluteJointRotations[j] * absOffset;
+                    q = KinectData.absoluteJointRotations[j];
+
+                    if (j == 4 || j == 5 || j == 6 || j == 7)
+                    {
+                        q = KinectData.absoluteJointRotations[j + 7];
+                    }
+                    else if (j == 11 || j == 12 || j == 13 || j == 14)
+                    {
+                        q = KinectData.absoluteJointRotations[j - 7];
+                    }
+                    else if (j == 18 || j == 19 || j == 20 || j == 21)
+                    {
+                        q = KinectData.absoluteJointRotations[j + 4];
+                    }
+                    else if (j == 22 || j == 23 || j == 24 || j == 25)
+                    {
+                        q = KinectData.absoluteJointRotations[j - 4];
+                    }
                 }
-                
-                if (j == 0)
-                {
-                    // character root plus translation reading from the kinect, plus the offset from the script public variables
-                    finalJoint.position = CharacterRootTransform.position + new Vector3(RootPosition.transform.localPosition.x, RootPosition.transform.localPosition.y + OffsetY, RootPosition.transform.localPosition.z - OffsetZ);
-                }
+
+                q = new Quaternion(q.x * -1, q.y, q.z, q.w * -1); // mirror the rotation
+                finalJoint.rotation = absOffset * Quaternion.Inverse(absOffset) * q * absOffset;
+
+                //if (j == 0)
+                //{
+                //    // character root plus translation reading from the kinect, plus the offset from the script public variables
+                //    finalJoint.position = CharacterRootTransform.position + new Vector3(RootPosition.transform.localPosition.x, RootPosition.transform.localPosition.y + OffsetY, RootPosition.transform.localPosition.z - OffsetZ);
+                //}
             }
         }
     }
